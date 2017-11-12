@@ -7,7 +7,7 @@ import {Socket} from "dgram"
 export default class UDPClient {
 
     private static  port: number = 25500;
-    private static address: string = "255.255.255.255";
+    private static address: string = "192.168.137.255";
 
     private static hello: ActionMessage = {
         Action: Action.HELLO,
