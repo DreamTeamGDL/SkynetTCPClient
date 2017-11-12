@@ -58,7 +58,7 @@ export default class TCPClient {
         for (let key of Object.keys(netInfo)) {
             for (let data of netInfo[key]) {
                 if (data.mac != "00:00:00:00:00:00") {
-                    return data.mac.replace(":", "").toUpperCase();
+                    return data.mac.replace(/:/g, "").toUpperCase();
                 }
             }
         }
