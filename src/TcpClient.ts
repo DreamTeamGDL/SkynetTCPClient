@@ -32,6 +32,11 @@ export default class TCPClient {
         });
     }
 
+    public sendAndForget(message: ActionMessage): void {
+        let bytes = Buffer.from(JSON.stringify(message), "utf8");
+        this.tcpClient.write(bytes);
+    }
+
     public listen(handler: (message: ActionMessage) => void): void {
 	console.log("Listening..");
         this.tcpClient.addListener("data", (data: Buffer) => {

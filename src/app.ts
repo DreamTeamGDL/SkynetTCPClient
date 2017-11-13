@@ -48,10 +48,10 @@ class Application {
         let action: string[] = message.Do.split(";");
         let pinName = action[0];
         this.configuration.PinMap[pinName].write(action[1] == "TRUE");
-        this.tcpClient.send({
+        this.tcpClient.sendAndForget({
             Action: Action.ACKNOWLEDGE,
-            Name: "",
-            Do: ""
+            Name: message.Name,
+            Do: message.Do
         });
         console.log("Acknowledge");
     }
