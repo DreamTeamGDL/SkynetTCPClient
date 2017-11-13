@@ -12,6 +12,8 @@ import { Pin } from "./Pin";
 
 class Application {
 
+    private tcpClient: TCPClient;
+
     private configuration: Configuration;
 
     public constructor() {
@@ -31,24 +33,27 @@ class Application {
     }
 
     private handledConnect: () => Promise<void> = async () => {
-        let tcpClient = await this.find();
-        await tcpClient.connect();
-        await this.configure(tcpClient);
-        await tcpClient.send({
+        this.tcpClient = await this.find();
+        await this.tcpClient.connect();
+        await this.configure(this.tcpClient);
+        await this.tcpClient.send({
             Action: Action.CONNECT,
             Name: this.configuration.ClientName,
             Do: ""
         });
-        tcpClient.listen(this.messageHandler);
+        this.tcpClient.listen(this.messageHandler);
     }
 
     private messageHandler: (message: ActionMessage) => void = (message) => {
-        console.log(message);
-        console.log("Is this the place?");
         let action: string[] = message.Do.split(";");
         let pinName = action[0];
-	    console.log(action[1] == "TRUE");
         this.configuration.PinMap[pinName].write(action[1] == "TRUE");
+        this.tcpClient.send({
+            Action: Action.ACKNOWLEDGE,
+            Name: "",
+            Do: ""
+        });
+        console.log("Acknowledge");
     }
 
     private find: () => Promise<TCPClient> = async () => {

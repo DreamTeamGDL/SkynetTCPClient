@@ -70,15 +70,16 @@ export default class TCPClient {
         resolve: (value: any) => void, 
         reject: (reason?: any) => void
     ): Promise<void> {
-	console.log(JSON.stringify(message));
+	    console.log(JSON.stringify(message));
         let bytes = Buffer.from(JSON.stringify(message), "utf8");
         this.tcpClient.write(bytes);
-        this.tcpClient.addListener("data", (data: Buffer) => {
+        let listener: (data: Buffer) => void = (data: Buffer) => {
             let response = JSON.parse(data.toString("utf8"));
             console.log(response);
-            this.tcpClient.removeAllListeners();
-            resolve(response);
-        });
+            resolve(response);   
+            this.tcpClient.removeListener("data", listener);
+        };
+        let createdSocket = this.tcpClient.addListener("data", listener);
         setInterval(() => reject(new Error("TCP response not found")), 5000);
     }
 }

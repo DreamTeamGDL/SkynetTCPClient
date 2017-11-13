@@ -2,7 +2,8 @@
     CONNECT, 
     TELL,
     HELLO,
-    CONFIGURE
+    CONFIGURE,
+    ACKNOWLEDGE
  }
 
  export default interface ActionMessage {
